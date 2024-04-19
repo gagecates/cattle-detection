@@ -1,35 +1,51 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cattle_detection/system.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 Future<void> syncPhotosWithCloud() async {
   print("Syncing photos to cloud storage...");
 
-  final directory = await getApplicationDocumentsDirectory();
-  final imageDirectory = Directory(directory.path);
-  List<File> images =
-      imageDirectory.listSync().map((item) => File(item.path)).toList();
+  List<AssetEntity> photos = await fetchPhotos();
 
-  for (File image in images) {
-    print("image file $image");
-    try {
-      String fileName = image.path.split('/').last;
-      TaskSnapshot snapshot = await FirebaseStorage.instance
-          .ref()
-          .child('images/$fileName')
-          .putFile(image);
+  for (AssetEntity image in photos) {
+    // Requesting the original file data
+    File? file = await getFileFromAssetEntity(image);
+    if (file != null) {
+      try {
+        String fileName = path.basename(file.path);
+        TaskSnapshot snapshot = await FirebaseStorage.instance
+            .ref()
+            .child('images/$fileName')
+            .putFile(file);
 
-      if (snapshot.state == TaskState.success) {
-        print("Photo successfully uploaded to firebase storage");
-        // Optionally delete the image locally or mark as uploaded
-        await image.delete();
+        if (snapshot.state == TaskState.success) {
+          print("Photo successfully uploaded to firebase storage");
+        }
+      } catch (e) {
+        print('Error uploading image: $e');
       }
-    } catch (e) {
-      print('Error uploading image: $e');
     }
   }
+}
+
+// convert image assets to file
+
+Future<File?> getFileFromAssetEntity(AssetEntity asset) async {
+  final file = await asset.file; // Get the file
+  if (file != null) {
+    // If there's temporary directory needed, you can copy the file to a temporary directory
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/${path.basename(file.path)}');
+    await file.copy(tempFile.path);
+    return tempFile;
+  }
+  return null;
 }
 
 Future<void> uploadImage(XFile image) async {

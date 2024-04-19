@@ -104,8 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       return;
     }
-    uploadImage(image)
-    // saveImageLocally(image)
+
     objDetect = await _objectModel.getImagePrediction(
         await File(image!.path).readAsBytes(),
         minimumScore: 0.1,
