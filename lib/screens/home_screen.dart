@@ -1,3 +1,6 @@
+import 'package:cattle_detection/firebase_setup.dart';
+import 'package:cattle_detection/system.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -26,10 +29,39 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ResultObjectDetection?> objDetect = [];
   bool firststate = false;
   bool message = true; // Should show choose photo text
+  String connectionStatus = '';
+  Map _source = {ConnectivityResult.none: false};
+  final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
+
   @override
   void initState() {
     super.initState();
     loadModel();
+    _networkConnectivity.initialise();
+    _networkConnectivity.myStream.listen((source) {
+      _source = source;
+      // Determine connection status and provider to update appBar
+      ConnectivityResult status = _source.keys.toList()[0];
+      if (status != ConnectivityResult.none) {
+        // If connection is restored, sync with cloud
+        syncPhotosWithCloud();
+      }
+      print("Connection status changed: $status");
+      switch (status) {
+        case ConnectivityResult.mobile:
+          connectionStatus =
+              _source.values.toList()[0] ? 'Mobile: Online' : 'Mobile: Offline';
+          break;
+        case ConnectivityResult.wifi:
+          connectionStatus =
+              _source.values.toList()[0] ? 'WiFi: Online' : 'WiFi: Offline';
+          break;
+        case ConnectivityResult.none:
+        default:
+          connectionStatus = 'Offline';
+      }
+      setState(() {});
+    });
   }
 
   // load model from assets
@@ -72,6 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       return;
     }
+    uploadImage(image)
+    // saveImageLocally(image)
     objDetect = await _objectModel.getImagePrediction(
         await File(image!.path).readAsBytes(),
         minimumScore: 0.1,
@@ -104,6 +138,16 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Cattle Detection",
             style: TextStyle(color: Colors.white)),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(connectionStatus,
+                  style: TextStyle(fontSize: 16)), // Text on the right side
+            ),
+          ),
+        ],
         backgroundColor: Colors.deepOrange,
       ),
       backgroundColor: Colors.white,
