@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // ask for photo permission on page load
     Permission.photos.request();
     loadModel();
     _networkConnectivity.initialise();
@@ -85,13 +86,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void handleTimeout() {
     // callback function to revert back to original state
+    print('here');
+    showAlertDialog(
+        context, 'Woops!', 'Taking longer than expected. Please try again.');
     setState(() {
-      firststate = true;
+      message = true;
     });
   }
 
-  Timer scheduleTimeout([int milliseconds = 10000]) =>
+  Timer scheduleTimeout(int milliseconds) =>
       Timer(Duration(milliseconds: milliseconds), handleTimeout);
+
   // running detections on image
   Future runObjectDetection() async {
     setState(() {
@@ -107,6 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       return;
     }
+    // 30 second timeout if not loading
+    scheduleTimeout(30000);
 
     objDetect = await _objectModel.getImagePrediction(
         await File(image!.path).readAsBytes(),
@@ -127,10 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       });
     });
-    // 5 second timeout if not loading
-    scheduleTimeout(5 * 1000);
+
     setState(() {
       _image = File(image.path);
+      firststate = true;
     });
   }
 

@@ -4,12 +4,13 @@ This is a Flutter application that allows users to choose a photo from their cam
 
 It uses a trained YOLOv5 model to detect the cattle in the image with bounding boxes.
 
----
+![Alt text](<Screenshot 2024-04-19 at 3.02.31 PM.png>)
 
 ## Technologies
 
 - Flutter
 - YOLOV5
+- Firebase
 
 ---
 
@@ -17,48 +18,58 @@ It uses a trained YOLOv5 model to detect the cattle in the image with bounding b
 
 1. If you do not have flutter installed, [install it](https://docs.flutter.dev/get-started/install/macos/mobile-ios?tab=download) for your system requirements
 
-## Step by step https://www.youtube.com/watch?v=GRtgLlwxpc4
+2. Clone repository
+3. Install dependencies
 
-- Install Flutter[coco128.yaml](..%2Fcoco128.yaml)
-- Download pre-trained YOLO model (Show instructions)
+```
+flutter pub get
+```
 
-3. Gather images and labels for cattle (Show instructions)
+4. Run the app
 
-- Images from google. Save for both train and val data folders > dataset/images/train | dataset/images/val etc..
-- Use [makesense.ai](https://www.makesense.ai/) to create labels and bounding boxes for all images
-- Use YOLOV5 colab to train model https://github.com/ultralytics/yolov5 https://colab.research.google.com/github/ultralytics/yolov5/blob/master/tutorial.ipynb
-- Edit yolov5 > data > coco128.yaml to change # of classes, class names, and file paths to dataset
-- Train model (50 epochs) saved in yolov5 > runs > train > {exp_train_version}
-- Test model (detect) with test image folder/files.
+```
+flutter run
+```
 
-4. Once tested, convert the .pt (pytorch) > .pb model (tensorflow) > .tflite model to use in device
-5. Test again with converted model
-6. Download the yolo5 foler
-7. copy the new best-fp16.tflite model into project > assets > models
-8. Add to pubspec.yaml assets
-9. Add tflite_flutter to dependencies
-10. Run flutter pub get to install depts
-11.
+## Auth
 
-### Train YOLOv5s on COCO128 for 3 epochs
+Firebase authentication is used. To run locally, you will need to set up the app to use your firebase project.
+
+[Instructions for flutter](https://firebase.google.com/docs/flutter/setup?platform=ios)
+
+## Train YOLO model
+
+Use Google Colab to easily train model or clone the repo and follow instructions
+
+[YOLO Repo](https://github.com/ultralytics/yolov5)
+
+Use [makesense.ai](https://www.makesense.ai/) to create labels and bounding boxes for all images
+
+YOLO model then converted to torchlite to use with flutter_pytorch plugin. (Follow instructions in convert.py file to change output of model type).
+
+#### Train YOLOv5s on COCO128 for 50 epochs
+
+\*\*\* edit the custom .yaml file to contain the train/val data file paths as well as class names
 
 ```
 !python train.py --img 640 --batch 16 --epochs 50 --data custom-data.yaml --weights yolov5s.pt --cache
 ```
 
-### Test model
+#### Test model
 
 ```
 !python detect.py --weights runs/train/exp3/weights/best.pt --img 640 --conf 0.25 --source ../dataset/images/train
 ```
 
-## Create APK
+## Build
+
+### Create APK for android release
 
 ```
 flutter build apk --release
 ```
 
-## Create IPA (IOS)
+### Create IPA (IOS)
 
 ```
 flutter build ipa
