@@ -13,8 +13,13 @@ class _LoginPageState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
 
   void _login() async {
+    setState(() {
+      _isLoading = true; // Start loading before the login attempt
+    });
+
     try {
       final UserCredential userCredential =
           await _auth.signInWithEmailAndPassword(
@@ -32,6 +37,13 @@ class _LoginPageState extends State<LoginScreen> {
     } catch (e) {
       print("Login Error: $e");
       showAlertDialog(context, 'Login Error', 'Incorrect email or password');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading =
+              false; // Stop loading irrespective of login success or failure
+        });
+      }
     }
   }
 
@@ -65,8 +77,18 @@ class _LoginPageState extends State<LoginScreen> {
             ),
             SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _login,
-              child: Text('Login'),
+              onPressed:
+                  _isLoading ? null : _login, // Disable button when loading
+              child: _isLoading
+                  ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                  : Text('Login'),
+              style: ElevatedButton.styleFrom(
+                minimumSize:
+                    Size(double.infinity, 50), // makes it stretch in its parent
+                elevation: 0,
+              ),
             ),
           ],
         ),

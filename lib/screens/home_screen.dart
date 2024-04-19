@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // load model from assets
   Future loadModel() async {
-    String pathObjectDetectionModel = "assets/best.torchscript";
+    String pathObjectDetectionModel = "assets/newest.torchscript";
     try {
       _objectModel = await FlutterPytorch.loadObjectDetectionModel(
           pathObjectDetectionModel, 1, 640, 640, // 1 = only one class 'cattle'
@@ -86,12 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void handleTimeout() {
     // callback function to revert back to original state
-    print('here');
-    showAlertDialog(
-        context, 'Woops!', 'Taking longer than expected. Please try again.');
-    setState(() {
-      message = true;
-    });
+    if (_image == null) {
+      showAlertDialog(
+          context, 'Woops!', 'Taking longer than expected. Please try again.');
+      setState(() {
+        message = true;
+      });
+    }
   }
 
   Timer scheduleTimeout(int milliseconds) =>
