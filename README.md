@@ -50,3 +50,15 @@ Cattle present in the photo
 ```
 !python detect.py --weights runs/train/exp3/weights/best.pt --img 640 --conf 0.25 --source ../dataset/images/train
 ```
+
+## Create APK
+
+```
+flutter build apk --release
+```
+
+## Create IPA (IOS)
+
+```
+flutter build ipa
+```

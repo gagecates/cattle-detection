@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -66,13 +67,36 @@ Future<List<AssetEntity>> fetchPhotos() async {
   PermissionStatus permission = await Permission.photos.request();
   if (permission.isGranted) {
     // Fetch albums
+    print("Photo access permission granted");
     List<AssetPathEntity> albums =
         await PhotoManager.getAssetPathList(onlyAll: true);
     List<AssetEntity> photos = await albums[0]
         .getAssetListPaged(page: 0, size: 100); // Adjust size as needed
     return photos;
   } else {
+    print("Photo access permission DENIED");
     PhotoManager.openSetting(); // Open settings if permission denied
     return [];
   }
+}
+
+void showAlertDialog(BuildContext context, String title, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          TextButton(
+            child: Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Dismiss alert dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

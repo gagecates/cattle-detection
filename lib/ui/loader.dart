@@ -35,10 +35,9 @@ class _LoaderStateState extends State<LoaderState>
   @override
   Widget build(BuildContext context) {
     return Material(
-        // elevation: 20,
         child: Container(
-            width: 110,
-            height: 110,
+            width: 70,
+            height: 70,
             child: Container(
               child: _isVisible
                   ? Gif(

@@ -1,4 +1,5 @@
-import 'package:cattle_detection/firebase_setup.dart';
+import 'package:cattle_detection/firebase_actions.dart';
+import 'package:cattle_detection/screens/login.dart';
 import 'package:cattle_detection/system.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -135,21 +136,43 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cattle Detection",
-            style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(connectionStatus,
-                  style: TextStyle(fontSize: 16)), // Text on the right side
-            ),
-          ),
-        ],
         backgroundColor: Colors.deepOrange,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceAround, // Align items on each side of the AppBar
+          children: <Widget>[
+            Text(
+              "Cattle Detection", // Centered text
+              style: TextStyle(color: Colors.white),
+            ),
+            Text(
+              connectionStatus, // Text on the right
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ],
+        ),
       ),
       backgroundColor: Colors.white,
+      // side menu drawer
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.all(8.0),
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.logout), // Icon to display
+              title: Text('Log out'),
+              onTap: () {
+                AuthHelper.logout(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -157,8 +180,23 @@ class _HomeScreenState extends State<HomeScreen> {
           !firststate
               ? !message
                   ? LoaderState()
-                  : Text("Select the icon to detect some cattle!",
-                      style: TextStyle(fontWeight: FontWeight.bold))
+                  : Column(
+                      children: [
+                        Text("Select the icon to detect some cattle!",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .end, // set the cow to complete right side
+                          children: [
+                            Image.asset(
+                              'assets/hiding-cow.webp',
+                              width: 100,
+                              height: 100,
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
               : Expanded(
                   child: Container(
                       child:

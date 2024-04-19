@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cattle_detection/screens/login.dart';
 import 'package:cattle_detection/system.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:photo_manager/photo_manager.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 Future<void> syncPhotosWithCloud() async {
   print("Syncing photos to cloud storage...");
@@ -61,5 +66,21 @@ Future<void> uploadImage(XFile image) async {
     // var downloadUrl = await snapshot.ref.getDownloadURL();
   } else {
     print('No Image Path Received');
+  }
+}
+
+class AuthHelper {
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  static Future<void> logout(BuildContext context) async {
+    try {
+      await _auth.signOut();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+      ;
+    } catch (e) {
+      print("Error logging out: $e");
+    }
   }
 }
