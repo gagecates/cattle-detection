@@ -31,6 +31,8 @@ flutter pub get
 flutter run
 ```
 
+5. Run on emulator or physical device in preferred IDE of Android Studio/Xcode
+
 ## Auth
 
 Firebase authentication is used. To run locally, you will need to set up the app to use your firebase project.
