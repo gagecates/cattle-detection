@@ -14,6 +14,12 @@ It uses a trained YOLOv5 model to detect the cattle in the image with bounding b
 
 ---
 
+## Overview
+
+Once logged in, users may choose from their camera roles images of their choice. If there is an image of a cattle, it will show the bounding box and predictions.
+
+The app monitors online connectivity, if connection is restored or available, all photos are synced to Firebase cloud storage. Otherwise they are saved and kept on the device to allow full offline functionality.
+
 ## Run Locally
 
 1. If you do not have flutter installed, [install it](https://docs.flutter.dev/get-started/install/macos/mobile-ios?tab=download) for your system requirements
