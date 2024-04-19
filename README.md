@@ -76,3 +76,13 @@ flutter build apk --release
 ```
 flutter build ipa
 ```
+
+## Examples
+
+![Alt text](<Screenshot 2024-04-19 at 5.04.53 PM.png>)
+
+![Alt text](<Screenshot 2024-04-19 at 5.05.03 PM.png>)
+
+![Alt text](<Screenshot 2024-04-19 at 5.04.44 PM.png>)
+
+![Alt text](<Screenshot 2024-04-19 at 3.02.31 PM-1.png>)
