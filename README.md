@@ -47,7 +47,7 @@ Use [makesense.ai](https://www.makesense.ai/) to create labels and bounding boxe
 
 YOLO model then converted to torchlite to use with flutter_pytorch plugin. (Follow instructions in convert.py file to change output of model type).
 
-#### Train YOLOv5s on COCO128 for 50 epochs
+#### Train YOLOv5s on dataset for 50 epochs
 
 \*\*\* edit the custom .yaml file to contain the train/val data file paths as well as class names
 
