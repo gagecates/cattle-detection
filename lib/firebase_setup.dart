@@ -13,6 +13,7 @@ Future<void> syncPhotosWithCloud() async {
 
   List<AssetEntity> photos = await fetchPhotos();
 
+  // for each image, convert to file and upload with snapshot results
   for (AssetEntity image in photos) {
     // Requesting the original file data
     File? file = await getFileFromAssetEntity(image);
@@ -35,7 +36,6 @@ Future<void> syncPhotosWithCloud() async {
 }
 
 // convert image assets to file
-
 Future<File?> getFileFromAssetEntity(AssetEntity asset) async {
   final file = await asset.file; // Get the file
   if (file != null) {
@@ -48,6 +48,7 @@ Future<File?> getFileFromAssetEntity(AssetEntity asset) async {
   return null;
 }
 
+// upload individual image to cloud
 Future<void> uploadImage(XFile image) async {
   final _firebaseStorage = FirebaseStorage.instance;
   var file = File(image.path);

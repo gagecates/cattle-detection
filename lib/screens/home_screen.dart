@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           runObjectDetection();
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.image),
         backgroundColor: Colors.deepOrange,
       ),
     );
