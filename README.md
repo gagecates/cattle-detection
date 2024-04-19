@@ -1,7 +1,8 @@
-# Cattle or Not?
+# Cattle Detection
 
-This is a Flutter application that allows users to choose a photo from their camera roll and determine if there is
-Cattle present in the photo
+This is a Flutter application that allows users to choose a photo from their camera roll and determine if there is Cattle present in the photo.
+
+It uses a trained YOLOv5 model to detect the cattle in the image with bounding boxes.
 
 ---
 

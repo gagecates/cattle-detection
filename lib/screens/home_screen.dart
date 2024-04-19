@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_pytorch/pigeon.dart';
 import 'package:flutter_pytorch/flutter_pytorch.dart';
 import 'package:cattle_detection/ui/loader.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    Permission.photos.request();
     loadModel();
     _networkConnectivity.initialise();
     _networkConnectivity.myStream.listen((source) {
