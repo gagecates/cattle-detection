@@ -83,6 +83,12 @@ flutter build apk --release
 flutter build ipa
 ```
 
+### Log connected Android
+
+```
+adb logcat | grep flutter
+```
+
 ## Examples
 
 ![Alt text](<Screenshot 2024-04-19 at 5.04.53 PM.png>)
